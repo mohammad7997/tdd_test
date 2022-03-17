@@ -9,10 +9,12 @@ use Tests\TestCase;
 
 class PostTest extends TestCase
 {
+    use RefreshDatabase;
     /**
      * A basic feature test example.
      *
      * @return void
+     * @test
      */
     public function insert_data()
     {
