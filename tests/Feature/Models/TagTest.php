@@ -10,19 +10,11 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class TagTest extends TestCase
 {
-    use RefreshDatabase;
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     * @test
-     *
-     */
-    public function insert_data()
+    use RefreshDatabase,TraitModelTest;
+
+    protected function get_model()
     {
-        $data = Tag::factory()->make()->toArray();
-        Tag::create($data);
-        $this->assertDatabaseHas('tags', $data);
+        return new Post();
     }
 
     /**

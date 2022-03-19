@@ -11,19 +11,11 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UserTest extends TestCase
 {
-    use RefreshDatabase;
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     * @test
-     */
-    public function insert_data()
+    use RefreshDatabase,TraitModelTest;
+
+    protected function get_model()
     {
-        $data = User::factory()->make()->toArray();
-        $data['password'] = 'test';
-        User::create($data);
-        $this->assertDatabaseHas('users', $data);
+        return new Post();
     }
 
     /**

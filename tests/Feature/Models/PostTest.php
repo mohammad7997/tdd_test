@@ -7,24 +7,17 @@ use Tests\TestCase;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\Comment;
+use Tests\Feature\Models\TraitModelTest;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class PostTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase,TraitModelTest;
 
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     * @test
-     */
-    public function insert_data()
+    protected function get_model()
     {
-        $data = Post::factory()->make()->toArray();
-        Post::create($data);
-        $this->assertDatabaseHas('posts',$data);
+        return new Post();
     }
 
     /**

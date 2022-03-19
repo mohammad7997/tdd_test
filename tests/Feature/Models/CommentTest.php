@@ -11,19 +11,11 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CommentTest extends TestCase
 {
-    use RefreshDatabase;
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     * @test
-     */
-    public function insert_data()
-    {
-        $data = Comment::factory()->make()->toArray();
+    use RefreshDatabase,TraitModelTest;
 
-        Comment::create($data);
-        $this->assertDatabaseHas('comments', $data);
+    protected function get_model()
+    {
+        return new Post();
     }
 
     /**
