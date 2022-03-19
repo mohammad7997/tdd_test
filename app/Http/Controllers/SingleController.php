@@ -17,6 +17,10 @@ class SingleController extends Controller
 
     public function save_comment(Request $request,Post $post)
     {
+        $request->validate([
+            'content' => 'required',
+        ]);
+
         $post->comments()->create([
             'user_id' => \Auth::user()->id,
             'content' => $request->content,

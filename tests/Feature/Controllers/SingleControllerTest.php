@@ -104,4 +104,43 @@ class SingleControllerTest extends TestCase
         $this->assertDatabaseMissing('comments',$data);
 
     }
+
+
+    /**
+     * comment_save_validation_error
+     *
+     * @return void
+     * @test
+     */
+    public function comment_save_validation_error()
+    {
+        $user = User::factory()->create();
+        $post = Post::factory()->create();
+
+        $this->actingAs($user);
+
+        $data = Comment::factory()
+                ->state([
+                    'user_id' => $user->id,
+                    'commentable_id' => $post->id,
+                ])
+                ->make()
+                ->toArray();
+
+        $response = $this->postJson(
+            route('single.save_comment',$post->id),
+            [
+                'content' => ''
+            ]
+        );
+
+        $response->assertJsonValidationErrors([
+            'content'
+        ]);
+
+        // for http
+        // $response->assertSessionHasErrors([
+        //     'content'
+        // ]);
+    }
 }
