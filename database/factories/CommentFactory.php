@@ -18,6 +18,7 @@ class CommentFactory extends Factory
             'content' => $this->faker->text,
             'commentable_id' => Post::factory(),
             'commentable_type' => Post::class,
+            'user_id' => User::class,
         ];
     }
 }
