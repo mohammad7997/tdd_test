@@ -19,7 +19,7 @@ class SingleControllerTest extends TestCase
      */
     public function index_method()
     {
-        $this->withoutExceptionHandling();
+        // $this->withoutExceptionHandling();
         $post = Post::factory()->hasComments(rand(1,20))->create();
 
         $response = $this->get(route('single.index', $post->id));
