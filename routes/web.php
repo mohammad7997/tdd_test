@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\SingleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,4 +20,12 @@ use App\Http\Controllers\HomeController;
 // });
 
 Route::get('home', [HomeController::class,'index'])->name('home');
+Route::get('single/{post}', [SingleController::class,'index'])->name('single.index');
 
+
+Auth::routes();
+
+Route::middleware('auth:web')->group(function(){
+    Route::post('single/{post}/comment', [SingleController::class,'save_comment'])->name('single.save_comment');
+});
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
