@@ -55,7 +55,7 @@ class SingleControllerTest extends TestCase
                 ->make()
                 ->toArray();
 
-        $response = $this->post(
+        $response = $this->postJson(
             route('single.save_comment',$post->id),
             [
                 'content' => $data['content']
@@ -63,7 +63,11 @@ class SingleControllerTest extends TestCase
         );
 
         $this->assertDatabaseHas('comments',$data);
-        $response->assertRedirect(route('single.index', $post->id));
+        // $response->assertRedirect(route('single.index', $post->id)); // for http
+        $response->assertOk();
+        $response->assertJson([
+            'success' => true
+        ]);
 
     }
 
@@ -88,14 +92,15 @@ class SingleControllerTest extends TestCase
 
         unset($data['user_id']);
 
-        $response = $this->post(
+        $response = $this->postJson(
             route('single.save_comment',$post->id),
             [
                 'content' => $data['content']
             ]
         );
 
-        $response->assertRedirect(route('login'));
+        // $response->assertRedirect(route('login'));
+        $response->assertUnauthorized();
         $this->assertDatabaseMissing('comments',$data);
 
     }

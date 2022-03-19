@@ -22,6 +22,9 @@ class SingleController extends Controller
             'content' => $request->content,
         ]);
 
-        return redirect(route('single.index',$post->id));
+        // return redirect(route('single.index',$post->id));
+        return \response()->json([
+            'success' => true
+        ]);
     }
 }
