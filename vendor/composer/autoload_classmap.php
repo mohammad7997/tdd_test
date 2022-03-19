@@ -134,6 +134,7 @@ return array(
     'Cron\\HoursField' => $vendorDir . '/dragonmantank/cron-expression/src/Cron/HoursField.php',
     'Cron\\MinutesField' => $vendorDir . '/dragonmantank/cron-expression/src/Cron/MinutesField.php',
     'Cron\\MonthField' => $vendorDir . '/dragonmantank/cron-expression/src/Cron/MonthField.php',
+    'Database\\Factories\\CommentFactory' => $baseDir . '/database/factories/CommentFactory.php',
     'Database\\Factories\\PostFactory' => $baseDir . '/database/factories/PostFactory.php',
     'Database\\Factories\\TagFactory' => $baseDir . '/database/factories/TagFactory.php',
     'Database\\Factories\\UserFactory' => $baseDir . '/database/factories/UserFactory.php',
