@@ -6,12 +6,13 @@ use App\Models\Tag;
 use Tests\TestCase;
 use App\Models\Post;
 use App\Models\User;
+use App\Models\Comment;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class PostTest extends TestCase
 {
-    // use RefreshDatabase;
+    use RefreshDatabase;
 
     /**
      * A basic feature test example.
@@ -57,5 +58,24 @@ class PostTest extends TestCase
 
         $this->assertCount($count,$post->tags);
         $this->assertTrue($post->tags()->first() instanceof Tag);
+    }
+
+
+    /**
+     * post_relationship_with_comment
+     *
+     * @return void
+     * @test
+     */
+    public function post_relationship_with_comment()
+    {
+        $count = rand(1, 10);
+
+        $post = Post::factory()
+                ->hasComments($count)
+                ->create();
+
+        $this->assertCount($count,$post->comments);
+        $this->assertTrue($post->comments->first() instanceof Comment);
     }
 }

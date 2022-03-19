@@ -3,13 +3,14 @@
 namespace Tests\Feature\Models;
 
 use Tests\TestCase;
+use App\Models\Post;
 use App\Models\Comment;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CommentTest extends TestCase
 {
-    // use RefreshDatabase;
+    use RefreshDatabase;
     /**
      * A basic feature test example.
      *
@@ -19,7 +20,26 @@ class CommentTest extends TestCase
     public function insert_data()
     {
         $data = Comment::factory()->make()->toArray();
+
         Comment::create($data);
         $this->assertDatabaseHas('comments', $data);
+    }
+
+
+
+    /**
+     * comment_relationship_with_post
+     *
+     * @return void
+     * @test
+     */
+    public function comment_relationship_with_post()
+    {
+        $comment = Comment::factory()
+                ->hasCommentable(Post::factory())
+                ->create();
+
+        $this->assertTrue(isset($comment->commentable->id));
+        $this->assertTrue($comment->commentable->first() instanceof Post);
     }
 }
