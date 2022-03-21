@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SingleController;
+use App\Http\Controllers\Admin\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,4 +29,9 @@ Auth::routes();
 Route::middleware('auth:web')->group(function(){
     Route::post('single/{post}/comment', [SingleController::class,'save_comment'])->name('single.save_comment');
 });
+
+Route::prefix('admin/')->name('admin.')->group(function(){
+    Route::resource('posts', PostController::class)->except('show');
+});
+
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
