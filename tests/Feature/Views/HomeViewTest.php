@@ -9,6 +9,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class HomeViewTest extends TestCase
 {
+    use RefreshDatabase;
     /**
      * A basic feature test example.
      *

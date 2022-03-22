@@ -2,14 +2,21 @@
 
 namespace Tests\Feature\Controllers\admin;
 
+use App\Models\Tag;
 use Tests\TestCase;
 use App\Models\Post;
-use App\Models\Tag;
+use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class PostControllerTest extends TestCase
 {
+    use RefreshDatabase;
+
+
+    protected $middleware = ['web','admin'];
+
+
     /**
      * A basic feature test example.
      *
@@ -18,12 +25,19 @@ class PostControllerTest extends TestCase
      */
     public function index_method()
     {
-        $this->withoutExceptionHandling();
+        $user = User::factory()->state(['type'=>'admin'])->create();
+        $this->actingAs($user);
+
         Post::factory()->count(100)->create();
         $response = $this->get(route('admin.posts.index'));
         $response->assertOk();
         $response->assertViewIs('admin.post.index');
         $response->assertViewHas('posts',Post::latest()->paginate(15));
+
+        $this->assertEquals(
+            request()->route()->middleware(),
+            $this->middleware
+        );
     }
 
     /**
@@ -34,11 +48,19 @@ class PostControllerTest extends TestCase
      */
     public function create_method()
     {
+        $user = User::factory()->state(['type'=>'admin'])->create();
+        $this->actingAs($user);
+
         Tag::factory()->count(100)->create();
         $response = $this->get(route('admin.posts.create'));
         $response->assertOk();
         $response->assertViewIs('admin.post.create');
         $response->assertViewHas('tags',Tag::latest()->get());
+
+        $this->assertEquals(
+            request()->route()->middleware(),
+            $this->middleware
+        );
     }
 
     /**
@@ -49,6 +71,9 @@ class PostControllerTest extends TestCase
      */
     public function edit_method()
     {
+        $user = User::factory()->state(['type'=>'admin'])->create();
+        $this->actingAs($user);
+
         $post = Post::factory()->create();
         Tag::factory()->count(100)->create();
         $response = $this->get(route('admin.posts.edit',$post->id));
@@ -58,5 +83,10 @@ class PostControllerTest extends TestCase
             'tags'=>Tag::latest()->get(),
             'post' => $post
         ]);
+
+        $this->assertEquals(
+            request()->route()->middleware(),
+            $this->middleware
+        );
     }
 }
