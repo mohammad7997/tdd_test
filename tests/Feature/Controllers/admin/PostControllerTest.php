@@ -99,7 +99,7 @@ class PostControllerTest extends TestCase
      */
     public function store_methode()
     {
-        $this->withoutExceptionHandling();
+        // $this->withoutExceptionHandling();
         $user = User::factory()->state(['type'=>'admin'])->create();
         $this->actingAs($user);
 
@@ -119,6 +119,49 @@ class PostControllerTest extends TestCase
         $this->assertEquals(
             $tags->pluck('id')->toArray(),
             Post::where($data)->first()->tags->pluck('id')->toArray()
+        );
+
+        $this->assertEquals(
+            request()->route()->middleware(),
+            $this->middleware
+        );
+    }
+
+
+    /**
+     * update_methode
+     *
+     * @return void
+     * @test
+     */
+    public function update_methode()
+    {
+        // $this->withoutExceptionHandling();
+        $user = User::factory()->state(['type'=>'admin'])->create();
+        $this->actingAs($user);
+
+        $post = Post::factory()->state(['user_id'=>$user->id])->hasTags(10)->create();
+        $data = Post::factory()->state(['id'=>$post->id,'user_id'=>$user->id])->make()->toArray();
+        $tags = Tag::factory()->count(10)->create();
+
+        $response = $this->put(route('admin.posts.update',$post->id),
+            array_merge(
+                ['tags'=>$tags->pluck('id')->toArray()],
+                $data
+            )
+        );
+
+        $this->assertDatabaseHas('posts',$data);
+        $response->assertRedirect(route('admin.posts.index'));
+        $response->assertSessionHas('message');
+        $this->assertEquals(
+            $tags->pluck('id')->toArray(),
+            Post::where($data)->first()->tags->pluck('id')->toArray()
+        );
+
+        $this->assertEquals(
+            request()->route()->middleware(),
+            $this->middleware
         );
     }
 }

@@ -81,9 +81,24 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Post $post)
     {
-        //
+        $post->update([
+            'title' => $request->title,
+            'image' => $request->image,
+            'description' => $request->description,
+        ]);
+
+        // $post = Post::create([
+        //     'user_id' => \Auth::user()->id,
+        //     'title' => $request->title,
+        //     'image' => $request->image,
+        //     'description' => $request->description,
+        // ]);
+
+        $post->tags()->sync($request->tags);
+
+        return redirect(route('admin.posts.index'))->with('message','post has been created');
     }
 
     /**
