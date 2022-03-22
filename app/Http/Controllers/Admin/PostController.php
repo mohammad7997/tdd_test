@@ -39,7 +39,16 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $post = Post::create([
+            'user_id' => \Auth::user()->id,
+            'title' => $request->title,
+            'image' => $request->image,
+            'description' => $request->description,
+        ]);
+        // dd($post);
+        $post->tags()->attach($request->tags);
+
+        return redirect(route('admin.posts.index'))->with('message','post has been created');
     }
 
     /**
