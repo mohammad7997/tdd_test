@@ -164,4 +164,99 @@ class PostControllerTest extends TestCase
             $this->middleware
         );
     }
+
+
+    /**
+     * validate_required_data
+     *
+     * @return void
+     * @test
+     */
+    public function validate_required_data()
+    {
+        $this->withExceptionHandling();
+        $user = User::factory()->state(['type'=>'admin'])->create();
+        $this->actingAs($user);
+
+        $errors = ['title','image','description','tags'];
+
+        $response_store = $this->post(route('admin.posts.store'),[]);
+        $response_store->assertSessionHasErrors($errors);
+
+        $post = Post::factory()->create();
+        $response_update = $this->put(route('admin.posts.update',$post->id),[]);
+        $response_update->assertSessionHasErrors($errors);
+    }
+
+
+    /**
+     * validate_image_url
+     *
+     * @return void
+     * @test
+     */
+    public function validate_image_url()
+    {
+        $this->withExceptionHandling();
+        $user = User::factory()->state(['type'=>'admin'])->create();
+        $this->actingAs($user);
+
+        $data = ['image' => 'sss'];
+        $errors = ['image'=>'The image must be a valid URL.'];
+
+        $response_store = $this->post(route('admin.posts.store'),$data);
+        $response_store->assertSessionHasErrors($errors);
+
+        $post = Post::factory()->create();
+        $response_update = $this->put(route('admin.posts.update',$post->id),$data);
+        $response_update->assertSessionHasErrors($errors);
+    }
+
+
+    /**
+     * validate_array
+     *
+     * @return void
+     * @test
+     */
+    public function validate_array()
+    {
+        $this->withExceptionHandling();
+        $user = User::factory()->state(['type'=>'admin'])->create();
+        $this->actingAs($user);
+
+        $data = ['tags' => 'sss'];
+        $errors = ['tags'=>'The tags must be an array.'];
+
+        $response_store = $this->post(route('admin.posts.store'),$data);
+        $response_store->assertSessionHasErrors($errors);
+
+        $post = Post::factory()->create();
+        $response_update = $this->put(route('admin.posts.update',$post->id),$data);
+        $response_update->assertSessionHasErrors($errors);
+    }
+
+
+    /**
+     * validate_exists
+     *
+     * @return void
+     * @test
+     */
+    public function validate_exists()
+    {
+        $this->withExceptionHandling();
+        $user = User::factory()->state(['type'=>'admin'])->create();
+        $this->actingAs($user);
+
+        $data = ['tags' => [0]];
+        $errors = ['tags.0'=>'The selected tags.0 is invalid.'];
+
+        $response_store = $this->post(route('admin.posts.store'),$data);
+        $response_store->assertSessionHasErrors($errors);
+
+        $post = Post::factory()->create();
+        $response_update = $this->put(route('admin.posts.update',$post->id),$data);
+        $response_update->assertSessionHasErrors($errors);
+    }
 }

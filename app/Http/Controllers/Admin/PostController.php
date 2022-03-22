@@ -39,6 +39,14 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'title' => 'required',
+            'image' => 'required|url',
+            'description' => 'required',
+            'tags' => 'required|array',
+            'tags.*' => 'exists:tags,id',
+        ]);
+
         $post = Post::create([
             'user_id' => \Auth::user()->id,
             'title' => $request->title,
@@ -83,18 +91,19 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
+        $request->validate([
+            'title' => 'required',
+            'image' => 'required|url',
+            'description' => 'required',
+            'tags' => 'required|array',
+            'tags.*' => 'exists:tags,id',
+        ]);
+
         $post->update([
             'title' => $request->title,
             'image' => $request->image,
             'description' => $request->description,
         ]);
-
-        // $post = Post::create([
-        //     'user_id' => \Auth::user()->id,
-        //     'title' => $request->title,
-        //     'image' => $request->image,
-        //     'description' => $request->description,
-        // ]);
 
         $post->tags()->sync($request->tags);
 
