@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SingleController;
 use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\Admin\UploadFileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +33,7 @@ Route::middleware('auth:web')->group(function(){
 
 Route::prefix('admin/')->middleware(['admin'])->name('admin.')->group(function(){
     Route::resource('posts', PostController::class)->except('show');
+    Route::post('upload-image', [UploadFileController::class,'upload_image'])->name('upload_file');
 });
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
