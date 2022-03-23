@@ -186,6 +186,11 @@ class PostControllerTest extends TestCase
         $post = Post::factory()->create();
         $response_update = $this->put(route('admin.posts.update',$post->id),[]);
         $response_update->assertSessionHasErrors($errors);
+
+        $this->assertEquals(
+            request()->route()->middleware(),
+            $this->middleware
+        );
     }
 
 
@@ -210,6 +215,11 @@ class PostControllerTest extends TestCase
         $post = Post::factory()->create();
         $response_update = $this->put(route('admin.posts.update',$post->id),$data);
         $response_update->assertSessionHasErrors($errors);
+
+        $this->assertEquals(
+            request()->route()->middleware(),
+            $this->middleware
+        );
     }
 
 
@@ -234,6 +244,11 @@ class PostControllerTest extends TestCase
         $post = Post::factory()->create();
         $response_update = $this->put(route('admin.posts.update',$post->id),$data);
         $response_update->assertSessionHasErrors($errors);
+
+        $this->assertEquals(
+            request()->route()->middleware(),
+            $this->middleware
+        );
     }
 
 
@@ -258,5 +273,39 @@ class PostControllerTest extends TestCase
         $post = Post::factory()->create();
         $response_update = $this->put(route('admin.posts.update',$post->id),$data);
         $response_update->assertSessionHasErrors($errors);
+
+        $this->assertEquals(
+            request()->route()->middleware(),
+            $this->middleware
+        );
+    }
+
+
+    /**
+     * destroy_method
+     *
+     * @return void
+     * @test
+     */
+    public function destroy_method()
+    {
+        // $this->withoutExceptionHandling();
+        $user = User::factory()->state(['type'=>'admin'])->create();
+        $this->actingAs($user);
+
+        $post = Post::factory()->hasTags(10)->hasComments(10)->create();
+        $comment = $post->comments()->first();
+
+        $response = $this->delete(route('admin.posts.destroy',$post->id));
+        $response->assertRedirect(route('admin.posts.index'));
+
+        $this->assertDeleted($comment);
+        $this->assertEmpty($post->tags);
+        $this->assertDeleted($post);
+
+        $this->assertEquals(
+            request()->route()->middleware(),
+            $this->middleware
+        );
     }
 }
