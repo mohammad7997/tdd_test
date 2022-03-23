@@ -11,6 +11,11 @@ class UploadFileController extends Controller
 
     public function upload_image(Request $request)
     {
+
+        $request->validate([
+            'image' => 'image|max:250',
+        ]);
+
         $image = $request->file('image');
         $hash_name = $image->hashName();
         Storage::disk('public')->putFileAs('images', $image, $hash_name);
